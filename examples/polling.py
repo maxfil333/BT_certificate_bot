@@ -26,12 +26,17 @@ while True:
         offset = -1  # -> offset + 1 = 0 -> берутся все непрочитанные сообщения
 
     start_time = time.time()
+
+    # Найдется ли апдейт с номером, следующим за предыдущим?
+    # Если да, возвращает все эти апдейты т.к. offset = 322 вернет [322:]
+    # Если нет, ожидание, новый цикл
     updates = requests.get(f'{API_URL}{TOKEN}/getUpdates?offset={offset + 1}').json()
 
     if updates['result']:
         for result in updates['result']:
             offset = result['update_id']
             do_something()
+
 
     time.sleep(3)
     print(f'Время между запросами к Telegram Bot API: {time.time() - start_time}')

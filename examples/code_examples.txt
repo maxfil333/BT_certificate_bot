@@ -57,3 +57,14 @@ def my_start_filter(message: Message) -> bool:
 @dp.message(my_start_filter)
 async def process_start_command(message: Message):
     await message.answer(text='Это команда /start')
+
+
+# send message
+updates = requests.get(f'{API_URL}{TOKEN}/getUpdates?offset={offset + 1}').json()
+if updates['result']:
+    print('New updates:', len(updates['result']))
+    for i, result in enumerate(updates['result']):
+        offset = result['update_id']
+        chat_id = result['message']['from']['id']
+        requests.get(f'{API_URL}{TOKEN}/sendMessage?chat_id={chat_id}&text={TEXT}')
+
