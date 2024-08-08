@@ -48,3 +48,12 @@ dp.message.register(send_audio_echo, F.audio)
 dp.message.register(send_voice_echo, F.voice)
 dp.message.register(send_file_echo, F.document)
 dp.message.register(send_echo)
+
+
+def my_start_filter(message: Message) -> bool:
+    return message.text == '/start'
+
+# Этот хэндлер будет срабатывать на команду "/start"
+@dp.message(my_start_filter)
+async def process_start_command(message: Message):
+    await message.answer(text='Это команда /start')

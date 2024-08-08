@@ -4,6 +4,7 @@
 import os
 import requests
 from dotenv import load_dotenv
+from aiogram import types
 from aiogram import Bot, Dispatcher
 from aiogram.filters import Command  # фильтры
 from aiogram.types import Message, ContentType  # апдейт Message, ContentType
@@ -55,14 +56,12 @@ async def send_photo_echo(message: Message):
 # Хэндлер зарегистрирован позже остальных, чтобы не перехватывал другие команды
 # @dp.message()
 # async def send_echo(message: Message):
-#     print(11111111111111)
 #     await message.reply(text=message.text)  # reply - этот метод подразумевает, что у апдейта есть поле text
 
 
 # универсальный хэндлер
 @dp.message()
 async def send_echo(message: Message):
-    print(2222222222222)
     try:
         await message.send_copy(chat_id=message.chat.id)
     except TypeError:
@@ -101,8 +100,21 @@ dp.message.register(send_photo_echo, F.content_type == ContentType.PHOTO)  # AUD
 
 
 if __name__ == '__main__':
-    dp.run_polling(bot, polling_timeout=7)
-    # getupdates_url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates'
-    # print(getupdates_url)
-    # response = requests.get(getupdates_url)
-    # presp(response)
+    # dp.run_polling(bot, polling_timeout=7)
+
+    getupdates_url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates'
+    print(getupdates_url)
+
+    response = requests.get(getupdates_url)
+    if response.status_code == 200:
+        updates = response.json()
+        print(updates)
+        if 'result' in updates and len(updates['result']) > 0:
+            for upd in updates['result']:
+                update = types.Update(**upd)
+                if update.message:
+                    message = update.message
+                    print(message.json())
+                else:
+                    print('No message found in the update.')
+
