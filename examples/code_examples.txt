@@ -68,3 +68,19 @@ if updates['result']:
         chat_id = result['message']['from']['id']
         requests.get(f'{API_URL}{TOKEN}/sendMessage?chat_id={chat_id}&text={TEXT}')
 
+# download file
+@dp.message(F.document)
+async def document_loader(message: Message):
+    doc = message.document
+    file_name, file_id = doc.file_name, doc.file_id
+    try:
+        destination = os.path.join(config['save_dir'], file_name)
+        # method 1
+        await bot.download(file_id, destination)
+        # method 2
+        # Получение пути к файлу на сервере TG ->
+        # -> file_id='B..' file_unique_id='A..' file_size=9.. file_path='documents/..'
+        file = await bot.get_file(file_id)
+        # Загрузка файла
+        await bot.download_file(file.file_path, destination)
+

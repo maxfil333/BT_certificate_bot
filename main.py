@@ -4,53 +4,81 @@ import json
 import requests
 from dotenv import load_dotenv
 
+from aiogram.client.default import DefaultBotProperties
 from aiogram import Bot, Dispatcher  # бот, диспетчер
-from aiogram.filters import Command  # фильтры
+from aiogram import F  # магический фильтр
+from aiogram.filters import Command, CommandStart  # фильтры
 from aiogram.types import Message, ContentType  # апдейт Message, ContentType
 
 from config import config
 from pprint import pprint
 
-
 load_dotenv()
 
 API_URL = 'https://api.telegram.org/bot'
-TOKEN = os.getenv('TESTBOT_TOKEN')
+TOKEN = config['TEST_TOKEN']
 
-bot = Bot(token=TOKEN)
+bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode='HTML'))
+
+
 dp = Dispatcher()
 
 
-# _____ CODE _____
+# __________ HANDLERS __________
 # TODO: Разнести функции по хэндлерам
 # TODO: Добавить проверку на наличие такого скачиваемого файлы в save_dir
 
-# универсальный хэндлер
-@dp.message()
+
+@dp.message(CommandStart())
+async def process_command_start(message: Message):
+    await message.answer(config['start_message'])
+
+
+@dp.message(Command(commands=['help']))
+async def process_command_help(message: Message):
+    await message.answer(config['help_message'])
+
+
+@dp.message(Command(commands=['contacts']))
+async def process_command_contacts(message: Message):
+    await message.answer(config['contacts'])
+
+
+@dp.message(F.document)
 async def document_loader(message: Message):
-    # pprint(json.loads(message.json()))
-    # print(message.document)
     doc = message.document
-    if doc:
-        file_name, file_id = doc.file_name, doc.file_id
-        try:
-            # Получение пути к файлу на сервере TG ->
-            # -> file_id='B..' file_unique_id='A..' file_size=9.. file_path='documents/..'
-            file = await bot.get_file(file_id)
-
-            # Загрузка файла
-            destination = os.path.join(config['save_dir'], file_name)
-            await bot.download_file(file.file_path, destination)
-
-        except Exception as error:
-            print(f'Ошибка после получения документа: {error}')
-            await message.answer(f"Файл '{file_name}' не получен.")
-
-        else:
-            await message.answer(f"Файл '{file_name}' успешно получен.")
-
+    file_name, file_id = doc.file_name, doc.file_id
+    try:
+        destination = os.path.join(config['save_dir'], file_name)
+        await bot.download(file_id, destination)
+    except Exception as error:
+        print(f'Ошибка после получения документа: {error}')
+        await message.answer(f"Файл '{file_name}' не получен.")
     else:
-        print('Документ не обнаружен')
+        await message.answer(f"Файл '{file_name}' успешно получен.")
+
+
+# TODO: исправить
+@dp.message(F.photo)
+async def document_loader(message: Message):
+    pprint(json.loads(message.json()))
+    await message.answer('Получено фото')
+    await message.answer("message_id:", message.message_id, "media_group_id", message.media_group_id)
+    photo_id, photo_name = message.photo[-1].file_id, message.photo[-1].file_unique_id
+    try:
+        destination = os.path.join(config['save_dir'], photo_name, '.jpg')
+        await bot.download(photo_id, destination)
+    except Exception as error:
+        print(f'Ошибка после получения документа: {error}')
+        await message.answer(f"Фото '{photo_name}' не получено.")
+    else:
+        await message.answer(f"Фото '{photo_name}' успешно получено.")
+
+
+@dp.message()
+async def process_other_messages(message: Message):
+    pprint(json.loads(message.json()))
+    await message.answer(f"Неизвестная команда")
 
 
 if __name__ == '__main__':
