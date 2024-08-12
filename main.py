@@ -12,6 +12,7 @@ from aiogram.types import Message, ContentType  # апдейт Message, ContentT
 
 from config import config
 from pprint import pprint
+from utils import get_unique_filename
 
 load_dotenv()
 
@@ -25,9 +26,6 @@ dp = Dispatcher()
 
 
 # __________ HANDLERS __________
-# TODO: Разнести функции по хэндлерам
-# TODO: Добавить проверку на наличие такого скачиваемого файлы в save_dir
-
 
 @dp.message(CommandStart())
 async def process_command_start(message: Message):
@@ -46,33 +44,32 @@ async def process_command_contacts(message: Message):
 
 @dp.message(F.document)
 async def document_loader(message: Message):
+    pprint(json.loads(message.json()))
     doc = message.document
     file_name, file_id = doc.file_name, doc.file_id
     try:
-        destination = os.path.join(config['save_dir'], file_name)
+        destination = get_unique_filename(os.path.join(config['save_dir'], file_name))
         await bot.download(file_id, destination)
     except Exception as error:
         print(f'Ошибка после получения документа: {error}')
-        await message.answer(f"Файл '{file_name}' не получен.")
+        await message.answer(f"Файл \"{file_name}\" не получен.")
     else:
-        await message.answer(f"Файл '{file_name}' успешно получен.")
+        await message.answer(f"Файл \"{file_name}\" успешно получен.")
 
 
-# TODO: исправить
 @dp.message(F.photo)
 async def document_loader(message: Message):
-    pprint(json.loads(message.json()))
-    await message.answer('Получено фото')
-    await message.answer("message_id:", message.message_id, "media_group_id", message.media_group_id)
+    # print(message.model_dump_json(indent=4, exclude_none=True))
+    # await message.answer(f"message_id:, {message.message_id}, media_group_id, {message.media_group_id}")
     photo_id, photo_name = message.photo[-1].file_id, message.photo[-1].file_unique_id
     try:
-        destination = os.path.join(config['save_dir'], photo_name, '.jpg')
+        destination = get_unique_filename(os.path.join(config['save_dir'], photo_name + '.jpg'))
         await bot.download(photo_id, destination)
     except Exception as error:
         print(f'Ошибка после получения документа: {error}')
-        await message.answer(f"Фото '{photo_name}' не получено.")
+        await message.answer(f"Фото \"{photo_name}\" не получено.")
     else:
-        await message.answer(f"Фото '{photo_name}' успешно получено.")
+        await message.answer(f"Фото \"{photo_name}\" успешно получено.")
 
 
 @dp.message()
