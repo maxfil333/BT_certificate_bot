@@ -10,9 +10,10 @@ load_dotenv()
 
 
 config = dict()
-config['TOKEN'] = os.getenv('BOT_TOKEN')
-config['TEST_TOKEN'] = os.getenv('TESTBOT_TOKEN')
+config['TOKEN'] = os.getenv('TOKEN')
+config['TEST_TOKEN'] = os.getenv('TEST_TOKEN')
 config['save_dir'] = '__data'
+# config['save_dir'] = r'\\10.10.0.3\docs\CUSTOM\0 Документы с Районов\IN'
 
 config['help_message'] = """
 Я работаю со следующими документами:
