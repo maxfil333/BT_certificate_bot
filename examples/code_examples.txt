@@ -84,3 +84,10 @@ async def document_loader(message: Message):
         # Загрузка файла
         await bot.download_file(file.file_path, destination)
 
+
+# Этот хэндлер срабатывает на редактирование сообщения
+@dp.edited_message()
+async def edited_message(edition):
+    print(edition.date.day)
+    print(edition.model_dump_json(indent=4, exclude_none=True))
+
