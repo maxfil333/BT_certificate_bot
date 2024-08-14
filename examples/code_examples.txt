@@ -58,6 +58,9 @@ def my_start_filter(message: Message) -> bool:
 async def process_start_command(message: Message):
     await message.answer(text='Это команда /start')
 
+    # pprint(json.loads(message.json()))
+    # print(message.model_dump_json(indent=4, exclude_none=True))
+
 
 # send message
 updates = requests.get(f'{API_URL}{TOKEN}/getUpdates?offset={offset + 1}').json()
