@@ -21,33 +21,32 @@ def drop_table(table_name):
     execute(f'DROP TABLE IF EXISTS {table_name}')
 
 
-def verify_guid(guid: str) -> list | None:
-    guid_exists = execute(f'SELECT * FROM codes WHERE guid = ?', (guid,))
-    if guid_exists:
-        print(guid_exists)
-        return guid_exists
-    print(f'guid "{guid}" not found')
-
-
 def delete_verified_guid(guid: str) -> None:
     execute(f'DELETE FROM codes WHERE guid = ?', (guid,))
 
 
-def add_user(message: Message, guid: str) -> int:
+def is_in_codes(guid: str) -> list | None:
+    guid_exists = execute('SELECT EXISTS(SELECT 1 FROM codes WHERE guid = ?);', (guid,))[0][0]
+    if guid_exists:
+        return guid_exists
+    print(f'guid "{guid}" not found')
+
+
+def is_in_users(message: Message) -> bool:
+    user_id = str(message.from_user.id)
+    command = 'SELECT EXISTS(SELECT 1 FROM users WHERE user_id = ?);'
+    return bool(execute(command, (user_id,))[0][0])
+
+
+def add_user(message: Message, guid: str) -> None:
     f_name = message.from_user.first_name
     l_name = message.from_user.last_name
     u_name = message.from_user.username
-    users_before = execute("SELECT COUNT(*) FROM USERS")[0][0]
+    user_id = message.from_user.id
 
     command = f"""
-    INSERT INTO users (first_name, last_name, username, guid)
-    SELECT ?, ?, ?, ?
-    WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = ?);
+    INSERT INTO users (first_name, last_name, username, user_id, guid)
+    SELECT ?, ?, ?, ?, ?
+    WHERE NOT EXISTS (SELECT 1 FROM users WHERE user_id = ?);
     """
-    execute(command, (f_name, l_name, u_name, guid, u_name))
-    users_after = execute("SELECT COUNT(*) FROM USERS")[0][0]
-
-    return users_after - users_before
-
-
-
+    execute(command, (f_name, l_name, u_name, user_id, guid, user_id))

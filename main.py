@@ -10,16 +10,27 @@ from aiogram.types import Message, ContentType  # объект Message, ContentT
 
 from config import config
 from utils import get_unique_filename
-from sql_queries import verify_guid, add_user, delete_verified_guid
+from sql_queries import is_in_codes, add_user, delete_verified_guid, is_in_users
+from create_db import main as main_create_db
+from create_deep_link import create_deep_links_from_codes
 
 load_dotenv()
 
+
+# __________ DATABASE __________
+
+# load or create DB
+main_create_db()
+
+# export current available codes to file
+create_deep_links_from_codes(save_txt=True)
+
+
+# __________ BOT PARAMETERS __________
+
 API_URL = 'https://api.telegram.org/bot'
 TOKEN = config['TEST_TOKEN']
-
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode='HTML'))
-
-
 dp = Dispatcher()
 
 
@@ -28,20 +39,21 @@ dp = Dispatcher()
 @dp.message(CommandStart(deep_link=True))
 async def process_command_start(message: Message, command: CommandObject):
     try:
-        args = command.args
-        # payload = decode_payload(args)
-
-        verification = verify_guid(args)
-        new_user = add_user(message, args)
-        if verification and new_user:
-            delete_verified_guid(args)
-            await message.answer('Успешная авторизация!')
-            await message.answer(config['start_message'])
-        elif verification and not new_user:
+        argument = command.args  # type(argument) is str
+        user_verified = is_in_users(message)
+        if user_verified:
             await message.answer('Вы уже авторизованы.')
         else:
-            await message.answer('Ошибка авторизации. Приглашение недействительно.'
-                                 'Запросите новую ссылку-приглашение. /contacts')
+            guid_verified = is_in_codes(guid=argument)
+            if guid_verified:
+                add_user(message=message, guid=argument)
+                delete_verified_guid(guid=argument)
+                await message.answer('Успешная авторизация!')
+                await message.answer(config['start_message'])
+            else:
+                await message.answer('Ошибка авторизации. Приглашение недействительно.'
+                                     'Запросите новую ссылку-приглашение. /contacts')
+
     except Exception as error:
         print('Непредвиденная ошибка авторизации:', error)
         print(traceback.format_exc())

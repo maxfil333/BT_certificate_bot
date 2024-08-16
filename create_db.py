@@ -30,6 +30,7 @@ def create_users():
         first_name TEXT,
         last_name TEXT,
         username TEXT NOT NULL,
+        user_id TEXT NOT NULL,
         guid TEXT NOT NULL
         )
     '''

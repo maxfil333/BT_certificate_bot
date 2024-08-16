@@ -21,13 +21,14 @@ def create_deep_link_with_guid(bot_name=BOT_NAME, guid='xxx'):
     return link
 
 
-def create_deep_links_from_codes(save_txt=False) -> None:
+def create_deep_links_from_codes(save_txt=False, show=False) -> None:
     guids = execute("SELECT guid FROM codes")
     links = [create_deep_link_with_guid(guid=guid[0]) + '\n' for guid in guids]
     if save_txt:
         with open('config_files/codes.txt', 'w', encoding='utf-8') as file:
             file.writelines(links)
-    print(*links)
+    if show:
+        print(*links)
 
 
 async def generate_deep_link(parameter: str):
@@ -37,4 +38,4 @@ async def generate_deep_link(parameter: str):
 
 
 if __name__ == "__main__":
-    create_deep_links_from_codes(save_txt=True)
+    create_deep_links_from_codes(save_txt=True, show=True)
