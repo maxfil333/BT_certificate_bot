@@ -4,6 +4,7 @@ crypto.key
 *.exe
 *.xls
 *.xlsx
+config_files/
 
 
 # Игнорировать каталоги и файлы конфигурации PyCharm
