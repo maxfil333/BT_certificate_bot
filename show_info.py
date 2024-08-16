@@ -4,10 +4,11 @@ import requests
 from dotenv import load_dotenv
 from pprint import pprint
 
+from config import config
 load_dotenv()
 
 API_URL = 'https://api.telegram.org/bot'
-TOKEN = os.getenv('TESTBOT_TOKEN')
+TOKEN = config['TEST_TOKEN']
 
 
 def print_response(response):

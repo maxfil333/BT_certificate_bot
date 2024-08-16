@@ -1,17 +1,16 @@
 import os
-import time
-import json
-import requests
+import traceback
 from dotenv import load_dotenv
 
 from aiogram.client.default import DefaultBotProperties
 from aiogram import Bot, Dispatcher  # бот, диспетчер
 from aiogram import F  # магический фильтр
-from aiogram.filters import Command, CommandStart  # фильтры
-from aiogram.types import Message, ContentType  # апдейт Message, ContentType
+from aiogram.filters import Command, CommandStart, CommandObject  # фильтры
+from aiogram.types import Message, ContentType  # объект Message, ContentType (TEXT, PHOTO, VIDEO, etc.)
 
 from config import config
 from utils import get_unique_filename
+from sql_queries import verify_guid, add_user, delete_verified_guid
 
 load_dotenv()
 
@@ -25,6 +24,31 @@ dp = Dispatcher()
 
 
 # __________ HANDLERS __________
+
+@dp.message(CommandStart(deep_link=True))
+async def process_command_start(message: Message, command: CommandObject):
+    try:
+        args = command.args
+        # payload = decode_payload(args)
+
+        verification = verify_guid(args)
+        new_user = add_user(message, args)
+        if verification and new_user:
+            delete_verified_guid(args)
+            await message.answer('Успешная авторизация!')
+            await message.answer(config['start_message'])
+        elif verification and not new_user:
+            await message.answer('Вы уже авторизованы.')
+        else:
+            await message.answer('Ошибка авторизации. Приглашение недействительно.'
+                                 'Запросите новую ссылку-приглашение. /contacts')
+    except Exception as error:
+        print('Непредвиденная ошибка авторизации:', error)
+        print(traceback.format_exc())
+        await message.answer('Непредвиденная ошибка авторизации.')
+
+    # print(message.model_dump_json(indent=4, exclude_none=True))
+
 
 @dp.message(CommandStart())
 async def process_command_start(message: Message):
