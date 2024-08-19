@@ -94,3 +94,9 @@ async def edited_message(edition):
     print(edition.date.day)
     print(edition.model_dump_json(indent=4, exclude_none=True))
 
+
+async def generate_deep_link(parameter: str):
+    async with Bot(token=TOKEN) as bot:
+        link = await create_start_link(bot, parameter, encode=False)
+        print(f'Your deep link: {link}')
+
