@@ -1,8 +1,5 @@
-import asyncio
-
 import requests
-from aiogram import Bot
-from aiogram.utils.deep_linking import create_start_link, create_deep_link
+from aiogram.utils.deep_linking import create_deep_link
 
 from config import config
 from sql_queries import execute
@@ -29,12 +26,6 @@ def create_deep_links_from_codes(save_txt=False, show=False) -> None:
             file.writelines(links)
     if show:
         print(*links)
-
-
-async def generate_deep_link(parameter: str):
-    async with Bot(token=TOKEN) as bot:
-        link = await create_start_link(bot, parameter, encode=False)
-        print(f'Your deep link: {link}')
 
 
 if __name__ == "__main__":
