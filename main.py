@@ -25,6 +25,7 @@ create_deep_links_from_codes(save_txt=True)
 TOKEN = config['TEST_TOKEN']
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode='HTML'))
 dp = Dispatcher()
+dp.include_router(handlers.authorization_router)
 dp.include_router(handlers.router)
 
 

@@ -8,15 +8,25 @@ from aiogram.filters import Command, CommandStart, CommandObject  # фильтр
 from aiogram.types import Message, ContentType  # объект Message, ContentType (TEXT, PHOTO, VIDEO, etc.)
 
 from config import config
+from filters import IsAuthorizedUser
 from utils import get_unique_filename
 from sql_queries import is_in_codes, add_user, delete_verified_guid, is_in_users
 
 
-# Инициализируем роутер уровня модуля
+# ___________ ROUTERS ___________
+
+# Инициализируем роутер попытки регистрации; Добавляем фильтр на команду start (по ссылке)
+authorization_router = Router()
+authorization_router.message.filter(CommandStart(deep_link=True))
+
+# Инициализируем роутеры уровня модуля; Добавляем фильтр наличия доступа у пользователя
 router = Router()
+router.message.filter(IsAuthorizedUser())
 
 
-@router.message(CommandStart(deep_link=True))
+# __________ HANDLERS __________
+
+@authorization_router.message()
 async def process_command_start(message: Message, command: CommandObject):
     try:
         argument = command.args  # type(argument) is str
