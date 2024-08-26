@@ -16,6 +16,7 @@ else:
     config['POPPLER_PATH'] = r'C:\Program Files\poppler-22.01.0\Library\bin'
     config['magick_exe'] = 'magick'  # или полный путь до ...magick.exe файла, если не добавлено в Path
 
+config['API_URL'] = 'https://api.telegram.org/bot'
 config['TOKEN'] = os.getenv('TOKEN')
 config['TEST_TOKEN'] = os.getenv('TEST_TOKEN')
 config['save_dir'] = '__data'
