@@ -31,6 +31,7 @@ def create_users():
         last_name TEXT,
         username TEXT NOT NULL,
         user_id TEXT NOT NULL,
+        date_register TEXT,
         guid TEXT NOT NULL
         )
     '''

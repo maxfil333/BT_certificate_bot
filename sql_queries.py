@@ -25,7 +25,8 @@ def delete_verified_guid(guid: str) -> None:
     execute(f'DELETE FROM codes WHERE guid = ?', (guid,))
 
 
-def delete_user(user_id: str) -> None:
+def delete_user(user_id: str | int) -> None:
+    user_id = str(user_id)
     user = execute('SELECT * FROM users WHERE user_id = ?', (user_id,))
     if user:
         print(f"Найден пользователь: {user}")
@@ -35,11 +36,9 @@ def delete_user(user_id: str) -> None:
         print("Пользователь не найден.")
 
 
-def is_in_codes(guid: str) -> list | None:
+def is_in_codes(guid: str) -> list | bool:
     guid_exists = execute('SELECT EXISTS(SELECT 1 FROM codes WHERE guid = ?);', (guid,))[0][0]
-    if guid_exists:
-        return guid_exists
-    print(f'guid "{guid}" not found')
+    return bool(guid_exists)
 
 
 def is_in_users(message: Message) -> bool:
@@ -52,14 +51,15 @@ def add_user(message: Message, guid: str) -> None:
     f_name = message.from_user.first_name
     l_name = message.from_user.last_name
     u_name = message.from_user.username
+    date_register = message.date.strftime('%Y-%m-%d %H:%M:%S')
     user_id = message.from_user.id
 
     command = f"""
-    INSERT INTO users (first_name, last_name, username, user_id, guid)
-    SELECT ?, ?, ?, ?, ?
+    INSERT INTO users (first_name, last_name, username, user_id, date_register, guid)
+    SELECT ?, ?, ?, ?, ?, ?
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE user_id = ?);
     """
-    execute(command, (f_name, l_name, u_name, user_id, guid, user_id))
+    execute(command, (f_name, l_name, u_name, user_id, date_register, guid, user_id))
 
 
 if __name__ == '__main__':
