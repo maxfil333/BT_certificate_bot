@@ -5,6 +5,7 @@ crypto.key
 *.xls
 *.xlsx
 config_files/
+examples/
 
 main.spec
 
