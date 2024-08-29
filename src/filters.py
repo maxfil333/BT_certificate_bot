@@ -1,7 +1,7 @@
 from aiogram.filters import BaseFilter
 from aiogram.types import Message
 
-from sql_queries import is_in_users
+from src.sql_queries import is_in_users
 
 
 class IsAuthorizedUser(BaseFilter):

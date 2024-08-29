@@ -2,8 +2,8 @@ import os
 import uuid
 import sqlite3
 
-from config import config
-from sql_queries import execute
+from src.config import config
+from src.sql_queries import execute
 
 
 def create_codes(db, k=1000):

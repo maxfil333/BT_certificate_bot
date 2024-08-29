@@ -1,10 +1,10 @@
-import os
-import json
 import requests
-from dotenv import load_dotenv
 from pprint import pprint
+from dotenv import load_dotenv
 
-from config import config
+from src.config import config
+
+
 load_dotenv()
 
 API_URL = 'https://api.telegram.org/bot'
@@ -31,6 +31,3 @@ if __name__ == "__main__":
     print(f'url: {get_updates_url}')
     print_response(requests.get(get_updates_url))
     print('-' * 50)
-
-
-

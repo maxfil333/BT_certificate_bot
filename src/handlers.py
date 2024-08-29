@@ -7,10 +7,10 @@ from aiogram import F  # магический фильтр
 from aiogram.filters import Command, CommandStart, CommandObject  # фильтры
 from aiogram.types import Message, ContentType  # объект Message, ContentType (TEXT, PHOTO, VIDEO, etc.)
 
-from config import config
-from filters import IsAuthorizedUser
-from utils import get_unique_filename
-from sql_queries import is_in_codes, add_user, delete_verified_guid, is_in_users
+from src.config import config
+from src.filters import IsAuthorizedUser
+from src.utils import get_unique_filename, showlog_message_info
+from src.sql_queries import is_in_codes, add_user, delete_verified_guid, is_in_users
 
 
 # ___________ ROUTERS ___________
@@ -40,6 +40,7 @@ async def process_command_start(message: Message, command: CommandObject):
                 delete_verified_guid(guid=argument)
                 await message.answer('Успешная авторизация!')
                 await message.answer(config['start_message'])
+                showlog_message_info(message, message_type='authorization')
             else:
                 await message.answer('Ошибка авторизации. Приглашение недействительно.'
                                      'Запросите новую ссылку-приглашение. /contacts')
@@ -70,7 +71,7 @@ async def process_command_contacts(message: Message):
 
 @router.message(F.document, lambda message: message.document.mime_type in ['application/pdf', 'image/jpeg', 'image/png'])
 async def document_loader(message: Message, bot: Bot):
-    print(message.model_dump_json(indent=4, exclude_none=True))
+    showlog_message_info(message, message_type='file')
     doc = message.document
     file_name, file_id = doc.file_name, doc.file_id
     try:
@@ -110,4 +111,4 @@ async def document_loader(message: Message):
 @router.message()
 async def process_other_messages(message: Message):
     await message.answer(f"Неизвестная команда")
-    print(message.model_dump_json(indent=4, exclude_none=True))
+    # print(message.model_dump_json(indent=4, exclude_none=True))

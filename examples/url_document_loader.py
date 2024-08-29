@@ -2,7 +2,8 @@ import os
 import time
 import requests
 from dotenv import load_dotenv
-from config import config
+
+from src.config import config
 
 
 load_dotenv()

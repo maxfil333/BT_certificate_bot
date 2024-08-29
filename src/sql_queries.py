@@ -1,8 +1,7 @@
-import os
 import sqlite3
 from aiogram.types import Message
 
-from config import config
+from src.config import config
 
 
 # __________ queries __________

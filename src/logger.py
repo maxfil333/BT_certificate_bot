@@ -22,5 +22,8 @@ class Logger:
         with open(log_file, 'a', encoding='utf-8') as file:
             file.writelines(self.data)
 
+    def clear(self):
+        self.data = []
+
 
 logger = Logger()
