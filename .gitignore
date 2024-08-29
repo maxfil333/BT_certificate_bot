@@ -6,6 +6,7 @@ crypto.key
 *.xlsx
 config_files/
 
+main.spec
 
 # Игнорировать каталоги и файлы конфигурации PyCharm
 .idea/
