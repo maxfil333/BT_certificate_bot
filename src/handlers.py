@@ -43,7 +43,7 @@ async def process_command_start(message: Message, command: CommandObject):
                 showlog_message_info(message, message_type='authorization')
             else:
                 await message.answer('Ошибка авторизации. Приглашение недействительно.'
-                                     'Запросите новую ссылку-приглашение. /contacts')
+                                     'Запросите новую ссылку-приглашение.')
 
     except Exception as error:
         print('Непредвиденная ошибка авторизации:', error)
