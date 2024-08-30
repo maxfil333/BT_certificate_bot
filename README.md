@@ -16,7 +16,7 @@
    <br>```pip install -r requirements.txt```
    <br>```pip list```
 
-5) Положить в корень проекта файл **.env**
+5) Положить в корень проекта файл **env.env**
    или изменить в файле **src/config.py**
    <br>```load_dotenv('env.env')``` на <br>```load_dotenv(r"<путь_к_вашему_файлу_env>")```
 
