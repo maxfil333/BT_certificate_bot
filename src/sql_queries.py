@@ -4,7 +4,7 @@ from aiogram.types import Message
 from src.config import config
 
 
-# __________ queries __________
+# __________ queries __________ven
 
 def execute(command, args=tuple()):
     connection = sqlite3.connect(config['sqlite_db'])
@@ -62,4 +62,4 @@ def add_user(message: Message, guid: str) -> None:
 
 
 if __name__ == '__main__':
-    pass
+    print(execute('select * from users'))

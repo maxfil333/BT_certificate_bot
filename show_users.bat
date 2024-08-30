@@ -7,5 +7,10 @@ if exist .venv (
     call venv\Scripts\activate
 )
 
-python main.py
+REM running script
+python -m src.sql_queries
 
+REM user enter
+echo.
+echo press any button to close this window
+pause >nul
