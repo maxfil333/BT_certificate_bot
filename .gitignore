@@ -22,8 +22,7 @@ venv/
 ENV/
 env/
 .venv/
-.env
-encrypted.env
+*.env
 
 # Игнорировать файлы, скомпилированные Python
 *.pyc
