@@ -1,6 +1,6 @@
 import os
 import sys
-from dotenv import load_dote
+from dotenv import load_dotenv
 
 
 config = dict()
