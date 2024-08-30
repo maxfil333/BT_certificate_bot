@@ -18,7 +18,7 @@
 
 5) Положить в корень проекта файл **env.env**
    или изменить в файле **src/config.py**
-   <br>```load_dotenv(os.path.join('..', 'env.env'))``` на <br>```load_dotenv(r"<путь_к_вашему_файлу_env>")```
+   <br>```load_dotenv(os.path.join(config['BASE_DIR'], 'env.env'))``` на <br>```load_dotenv(r"<путь_к_вашему_файлу_env>")```
 
 6) При наличии базы данных добавить в корень проекта
    **config_files/database.db**

@@ -1,17 +1,9 @@
 import os
 import sys
-from dotenv import load_dotenv
+from dotenv import load_dote
 
-load_dotenv(os.path.join('..', 'env.env'))
 
 config = dict()
-
-# ____________________ PARAMS ____________________
-
-config['API_URL'] = 'https://api.telegram.org/bot'
-config['TOKEN'] = os.getenv('TOKEN')
-config['TEST_TOKEN'] = os.getenv('TEST_TOKEN')
-
 
 # ____________________ PATHS ____________________
 
@@ -19,6 +11,8 @@ if getattr(sys, 'frozen', False):  # в сборке
     config['BASE_DIR'] = os.path.dirname(sys.executable)
 else:
     config['BASE_DIR'] = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+load_dotenv(os.path.join(config['BASE_DIR'], 'env.env'))
 
 config['save_dir'] = r'\\10.10.0.3\docs\CUSTOM\0 Документы с Районов\IN'
 config['config_files'] = os.path.join(config['BASE_DIR'], 'config_files')
@@ -28,6 +22,13 @@ config['log_folder'] = r'\\10.10.0.3\docs\CUSTOM\0 Документы с Рай�
 
 if not os.path.exists(config['config_files']):
     os.makedirs(config['config_files'])
+
+
+# ____________________ PARAMS ____________________
+
+config['API_URL'] = 'https://api.telegram.org/bot'
+config['TOKEN'] = os.getenv('TOKEN')
+config['TEST_TOKEN'] = os.getenv('TEST_TOKEN')
 
 
 # ____________________ MESSAGES ____________________

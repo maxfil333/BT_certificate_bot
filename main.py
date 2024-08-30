@@ -1,5 +1,3 @@
-from dotenv import load_dotenv
-
 from aiogram import Bot, Dispatcher  # бот, диспетчер
 from aiogram.client.default import DefaultBotProperties
 
@@ -7,8 +5,6 @@ from src import handlers
 from src.config import config
 from src.create_db import main as main_create_db
 from src.create_deep_link import create_deep_links_from_codes
-
-load_dotenv()
 
 
 # __________ BOT PARAMETERS __________

@@ -1,11 +1,8 @@
 import requests
 from pprint import pprint
-from dotenv import load_dotenv
 
 from src.config import config
 
-
-load_dotenv()
 
 API_URL = 'https://api.telegram.org/bot'
 TOKEN = config['TEST_TOKEN']
