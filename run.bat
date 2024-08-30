@@ -7,5 +7,5 @@ if exist .venv (
     call venv\Scripts\activate
 )
 
-python main.py
+python main.py --production
 

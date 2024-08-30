@@ -1,3 +1,5 @@
+import asyncio
+import argparse
 from aiogram import Bot, Dispatcher  # бот, диспетчер
 from aiogram.client.default import DefaultBotProperties
 
@@ -7,28 +9,35 @@ from src.create_db import main as main_create_db
 from src.create_deep_link import create_deep_links_from_codes
 
 
-# __________ BOT PARAMETERS __________
+async def main(production=False):
+    print(f'prod: {production}')
 
-TOKEN = config['TOKEN']
-bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode='HTML'))
+    # ____________ TOKEN TYPE ____________
+    if production:
+        TOKEN = config['TOKEN']
+    else:
+        TOKEN = config['TEST_TOKEN']
 
+    # __________ BOT PARAMETERS __________
+    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode='HTML'))
 
-# _____________ DATABASE _____________
+    # _____________ DATABASE _____________
+    # load or create DB
+    main_create_db()
+    # export current available codes from db to file
+    create_deep_links_from_codes(token=TOKEN, save_txt=True)
 
-# load or create DB
-main_create_db()
+    # ____________ DISPATCHER ____________
+    dp = Dispatcher()
+    dp.include_router(handlers.authorization_router)
+    dp.include_router(handlers.router)
 
-# export current available codes from db to file
-create_deep_links_from_codes(token=TOKEN, save_txt=True)
+    await dp.start_polling(bot, polling_timeout=7)
 
-
-# ____________ DISPATCHER ____________
-
-dp = Dispatcher()
-dp.include_router(handlers.authorization_router)
-dp.include_router(handlers.router)
-
-# _______________ MAIN _______________
 
 if __name__ == '__main__':
-    dp.run_polling(bot, polling_timeout=7)
+    parser = argparse.ArgumentParser(description="DESCRIPTION: BT_certificate_bot")
+    parser.add_argument('-p', '--production', action='store_true', help='production run')
+    args = parser.parse_args()
+
+    asyncio.run(main(production=args.production))
