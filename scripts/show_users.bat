@@ -8,7 +8,7 @@ if exist .venv (
 )
 
 REM running script
-python -m src.sql_queries
+python -m scripts.show_users
 
 REM user enter
 echo.
