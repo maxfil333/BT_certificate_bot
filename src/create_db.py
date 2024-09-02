@@ -29,7 +29,7 @@ def create_users():
         id INTEGER PRIMARY KEY,
         first_name TEXT,
         last_name TEXT,
-        username TEXT NOT NULL,
+        username TEXT,
         user_id TEXT NOT NULL,
         date_register TEXT,
         guid TEXT NOT NULL
