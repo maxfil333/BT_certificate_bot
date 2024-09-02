@@ -1,5 +1,8 @@
 @echo off
 
+REM Переход в корневую директорию репозитория
+cd ..
+
 REM Проверка наличия папки .venv
 if exist .venv (
     call .venv\Scripts\activate
