@@ -74,8 +74,10 @@ async def document_loader(message: Message, bot: Bot):
     showlog_message_info(message, message_type='file')
     doc = message.document
     file_name, file_id = doc.file_name, doc.file_id
+    file_name_base, file_name_ext = os.path.splitext(file_name)
+    file_name_with_message_id = file_name_base + '_' + str(message.message_id) + file_name_ext
     try:
-        destination = get_unique_filename(os.path.join(config['save_dir'], file_name))
+        destination = get_unique_filename(os.path.join(config['save_dir'], file_name_with_message_id))
         await bot.download(file_id, destination)
     except Exception as error:
         print(f'Ошибка после получения документа: {error}')
