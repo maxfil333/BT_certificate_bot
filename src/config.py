@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 from dotenv import load_dotenv
 
 
@@ -14,21 +15,33 @@ else:
 
 load_dotenv(os.path.join(config['BASE_DIR'], 'env.env'))
 
-config['save_dir'] = r'\\10.10.0.3\docs\CUSTOM\0 Документы с Районов\IN'
 config['config_files'] = os.path.join(config['BASE_DIR'], 'config_files')
 config['sqlite_db'] = os.path.join(config['config_files'], 'database.db')
 config['codes_path'] = os.path.join(config['config_files'], 'codes.txt')
-config['log_folder'] = r'\\10.10.0.3\docs\CUSTOM\0 Документы с Районов'
-
-if not os.path.exists(config['config_files']):
-    os.makedirs(config['config_files'])
-
-
-# ____________________ PARAMS ____________________
 
 config['API_URL'] = 'https://api.telegram.org/bot'
 config['TOKEN'] = os.getenv('TOKEN')
-config['TEST_TOKEN'] = os.getenv('TEST_TOKEN')
+
+# ___ PATHS for debug (save_dir, token) ___
+
+if __name__ == '__main__':
+    DEBUG_JSON = os.path.abspath(os.path.join('..', 'DEBUG.json'))
+else:
+    DEBUG_JSON = os.path.abspath('DEBUG.json')
+
+if os.path.exists(DEBUG_JSON):
+    print(f"DEBUG.json was found in: {DEBUG_JSON}")
+    with open(DEBUG_JSON, 'r', encoding='utf-8') as file:
+        res = json.load(file)
+        config['save_dir'] = os.path.abspath(res['save_dir'])
+        config['TOKEN'] = res['test_token']
+else:
+    config['save_dir'] = r'\\10.10.0.3\docs\CUSTOM\0 Документы с Районов\IN'
+
+config['log_folder'] = os.path.dirname(config['save_dir'])
+
+if not os.path.exists(config['config_files']):
+    os.makedirs(config['config_files'])
 
 
 # ____________________ MESSAGES ____________________
@@ -50,7 +63,6 @@ config['start_message'] = f"""
 
 {config['help_message']}
 """
-
 
 config['contacts'] = '\n'.join(os.getenv('contacts').split('^'))
 

@@ -10,13 +10,12 @@ from src.create_deep_link import create_deep_links_from_codes
 
 
 async def main(production=False):
+    # TODO: убрать production
+
     print(f'prod: {production}')
 
-    # ____________ TOKEN TYPE ____________
-    if production:
-        TOKEN = config['TOKEN']
-    else:
-        TOKEN = config['TEST_TOKEN']
+    # ____________ TOKEN ____________
+    TOKEN = config['TOKEN']
 
     # __________ BOT PARAMETERS __________
     bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode='HTML'))

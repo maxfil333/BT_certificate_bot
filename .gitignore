@@ -9,6 +9,10 @@ examples/
 
 main.spec
 
+# debug
+DEBUG.json
+__debugDIR__
+
 # Игнорировать каталоги и файлы конфигурации PyCharm
 .idea/
 *.iml
