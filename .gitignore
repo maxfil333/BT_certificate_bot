@@ -1,5 +1,6 @@
 __*/
 __*
+!__init__.py
 crypto.key
 *.exe
 *.xls
