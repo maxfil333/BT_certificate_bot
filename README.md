@@ -1,3 +1,15 @@
+## Режим запуска
+- если в корневой директории есть файл **DEBUG.json**:
+```
+config['save_dir'] = DEBUG.json..['save_dir']
+config['TOKEN'] = DEBUG.json..['test_token']
+```
+- если нет:
+```
+save_dir = "...docs\CUSTOM\0 Документы с Районов\IN"
+config['TOKEN'] = .env..['TOKEN']
+```
+
 ## Для запуска бота на Windows Server:
 
 1) Установить:
