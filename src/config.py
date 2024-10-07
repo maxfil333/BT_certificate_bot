@@ -28,11 +28,7 @@ config['GETME_INFO'] = requests.get(getme_url).json()
 
 # ___ PATHS for debug (save_dir, token) ___
 
-if __name__ == '__main__':
-    DEBUG_JSON = os.path.abspath(os.path.join('..', 'DEBUG.json'))
-else:
-    DEBUG_JSON = os.path.abspath('DEBUG.json')
-
+DEBUG_JSON = os.path.join(config['BASE_DIR'], 'DEBUG.json')
 if os.path.exists(DEBUG_JSON):
     print(f"DEBUG.json was found in: {DEBUG_JSON}")
     with open(DEBUG_JSON, 'r', encoding='utf-8') as file:
