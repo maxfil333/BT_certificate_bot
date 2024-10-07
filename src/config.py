@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import requests
 from dotenv import load_dotenv
 
 
@@ -21,6 +22,9 @@ config['codes_path'] = os.path.join(config['config_files'], 'codes.txt')
 
 config['API_URL'] = 'https://api.telegram.org/bot'
 config['TOKEN'] = os.getenv('TOKEN')
+
+getme_url = f"https://api.telegram.org/bot{config['TOKEN']}/getMe"
+config['GETME_INFO'] = requests.get(getme_url).json()
 
 # ___ PATHS for debug (save_dir, token) ___
 
