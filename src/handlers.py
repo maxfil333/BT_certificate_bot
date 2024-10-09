@@ -8,6 +8,7 @@ from aiogram.filters import Command, CommandStart, CommandObject  # фильтр
 from aiogram.types import Message, ContentType  # объект Message, ContentType (TEXT, PHOTO, VIDEO, etc.)
 
 from src.config import config
+from src.logger import logger
 from src.filters import IsAuthorizedUser
 from src.utils import get_unique_filename, showlog_message_info
 from src.sql_queries import is_in_codes, add_user, delete_verified_guid, is_in_users
@@ -80,8 +81,10 @@ async def document_loader(message: Message, bot: Bot):
         destination = get_unique_filename(os.path.join(config['save_dir'], file_name_with_message_id))
         await bot.download(file_id, destination)
     except Exception as error:
-        print(f'Ошибка после получения документа: {error}')
         await message.answer(f"Файл \"{file_name}\" не получен.")
+        logger.print(f'Ошибка после получения документа: {error}')
+        logger.save(config['log_folder'])
+        logger.clear()
     else:
         await message.answer(f"Файл \"{file_name}\" успешно получен.")
 
