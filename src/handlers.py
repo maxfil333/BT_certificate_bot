@@ -113,4 +113,5 @@ async def document_loader(message: Message):
 @router.message()
 async def process_other_messages(message: Message):
     await message.answer(f"Неизвестная команда")
+    print(f"{message.from_user.username}: {message.text}")
     # print(message.model_dump_json(indent=4, exclude_none=True))
